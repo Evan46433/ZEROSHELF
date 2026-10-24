@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZERO SHELF</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#07142a;--bg2:#0b2a26;--panel:rgba(255,255,255,.07);--line:rgba(120,255,230,.22);--tx:#eefaf5;--mu:#9bb8b0;--em:#0f9d6e;--cy:#22d3ee;--mint:#6ee7b7;--lime:#a3e635;--am:#fbbf24;--or:#fb923c;--rd:#f87171;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){color-scheme:light;--bg:#eaf7f2;--bg2:#d6f1e6;--panel:rgba(255,255,255,.75);--line:rgba(15,157,110,.35);--tx:#0a2a28;--mu:#4a6b66}}
+*{box-sizing:border-box}html,body{margin:0}
+body{font:15px/1.5 Inter,system-ui,sans-serif;color:var(--tx);background:linear-gradient(160deg,var(--bg),var(--bg2));min-height:100vh;background-attachment:fixed}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:.2em 0}.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--tx);border-radius:10px;padding:8px 14px;min-height:40px}
+button:hover{border-color:var(--cy)}button:focus-visible{outline:2px solid var(--cy)}
+.pri{background:linear-gradient(90deg,var(--em),var(--cy));border:0;font-weight:600;color:#04201a}
+.glass{background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(8px);padding:16px}
+#intro{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 30%,#0f9d6e55,transparent 60%),linear-gradient(160deg,#07142a,#0a3a2c);color:#eefaf5}
+#intro h1{font-size:clamp(44px,10vw,92px);letter-spacing:.06em;background:linear-gradient(90deg,#6ee7b7,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:18px}
+nav{position:sticky;top:0;z-index:20;display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:rgba(7,20,42,.88);border-bottom:1px solid var(--line)}
+nav b{font-family:'Space Grotesk';margin-right:8px;color:var(--mint)}nav button.on{border-color:var(--cy);background:rgba(34,211,238,.15)}nav .sp{flex:1}
+main{max-width:1100px;margin:auto;padding:16px 14px 150px}
+.loc{color:var(--mu);margin:4px 0 12px}.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.zone{min-height:120px;text-align:left;position:relative}.zone.here{border-color:var(--lime);box-shadow:0 0 0 2px var(--lime) inset}.zone small{color:var(--mu)}
+.here-tag{position:absolute;right:8px;top:8px;font-size:11px;color:var(--lime)}
+.shelf{position:relative;overflow:hidden;border:2px solid var(--line);border-radius:14px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent)}
+.beam{position:absolute;top:0;bottom:0;width:3px;background:var(--cy);box-shadow:0 0 18px 6px var(--cy);left:-10px;opacity:0}.beam.go{animation:sweep 2.6s linear}
+@keyframes sweep{0%{left:0;opacity:1}100%{left:100%;opacity:1}}
+.card{position:relative;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel);transition:.3s}.card.lit{border-color:var(--cy);box-shadow:0 0 18px rgba(34,211,238,.6)}
+.card.sold{animation:out .6s}@keyframes out{50%{transform:translateY(-14px);opacity:.4}}
+.card .em{font-size:40px}.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;color:#04201a}
+.fresh{background:var(--mint)}.near{background:var(--am)}.urgent{background:var(--or)}.today{background:#f97316}.expired{background:#94a3b8}
+.lbl{margin-top:8px;padding:6px 8px;border-radius:8px;background:#021;border:1px solid var(--line);font-family:'JetBrains Mono';display:flex;justify-content:space-between;color:#c8ffe9}
+.lbl s{color:var(--rd)}.logbox{max-height:170px;overflow:auto;font-family:'JetBrains Mono';font-size:12px;color:var(--mint)}
+#tc{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;width:min(330px,calc(100vw - 20px))}
+#demo{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;width:min(340px,calc(100vw - 20px));display:none}
+#modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:14px}
+#modal>.glass{background:#0b1d2f;max-width:480px;width:100%;max-height:90vh;overflow:auto;color:#eefaf5}
+table{width:100%;border-collapse:collapse}td,th{padding:5px 6px;text-align:left;border-bottom:1px solid var(--line)}
+.num{font:700 32px 'Space Grotesk';color:var(--mint)}.flow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.flow span{padding:6px 10px;border-radius:99px;border:1px solid var(--cy)}
+.bar{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--em),var(--cy));margin:3px 0}
+.pw{height:8px;background:rgba(255,255,255,.12);border-radius:5px}.pw i{display:block;height:100%;border-radius:5px;background:var(--lime)}
+@media(max-width:640px){.map{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<div id="intro"><div class="mono" style="color:#6ee7b7">SENSE → SAVE → RECOVER</div><h1>ZERO SHELF</h1>
+<p style="font-size:18px;max-width:560px">Zero Waste. Smarter Shelves. Fresher Future.</p>
+<div class="row"><button class="pri" onclick="enter()">ENTER THE STORE</button><button onclick="how.style.display='block'">EXPLORE HOW IT WORKS</button></div>
+<div id="how" class="glass" style="display:none;max-width:560px;text-align:left"><b>SENSE</b> – simulated RFID tags and shelf sensors track every product and its expiry.<br><b>SAVE</b> – discounts rise automatically as expiry nears (10% / 20% / 30%).<br><b>RECOVER</b> – expired food is blocked from sale and routed to composting, biogas or other recovery. <br><span style="color:#9bb8b0">Everything here is a software simulation – no real RFID hardware or payments.</span></div></div>
+<nav id="nav"></nav><main id="app"></main>
+<div id="demo" class="glass"><div id="dtx" style="margin-bottom:8px"></div><button onclick="demoPause()">Pause/Resume</button> <button onclick="demoSkip()">Skip</button> <button onclick="startDemo()">Restart</button> <button onclick="stopDemo()">✕</button></div>
+<div id="tc" class="glass"><b>TIME CONTROL</b> <span id="clk" class="mono"></span><br><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<button id="pp" onclick="toggleRun()">▶ Resume</button><button onclick="adv(1)">+1 h</button><button onclick="adv(24)">+1 day</button><button id="spd" onclick="cycleSpeed()">Speed ×1</button><button onclick="resetSim()">Reset</button></div></div>
+<div id="modal" onclick="if(event.target==modal)closeM()"><div class="glass" id="mbody"></div></div>
+<script>
+const START=Date.UTC(2026,9,24,8),Z={produce:['Fruits & Vegetables','🥬'],dairy:['Dairy & Refrigerated','🥛'],bakery:['Bakery & Fresh Bread','🥖'],pack:['Packaged Foods','🥫']};
+const BASE={produce:[6,85],dairy:[3,80],bakery:[20,50],pack:[21,45]};
+const SEED=[['Strawberries','🍓','produce',12,126,20,.25],['Salad Leaves','🥗','produce',9,60,18,.15],['Apples','🍎','produce',8,400,30,.2],['Bananas','🍌','produce',6,150,25,.18],['Lettuce','🥬','produce',5,90,15,.4],
+['Fresh Milk','🥛','dairy',7,100,24,1],['Yoghurt','🍦','dairy',4.5,200,30,.15],['Cheese','🧀','dairy',16,600,12,.2],['Bread Loaf','🍞','bakery',5,40,20,.5],['Croissants','🥐','bakery',3.5,30,24,.08],['Pasta','🍝','pack',6,5000,30,.5],['Cereal','🥣','pack',14,4000,18,.4]];
+const DISC={fresh:0,near:.1,urgent:.2,today:.3,expired:0},NAMES={fresh:'Fresh',near:'Near Expiry',urgent:'Urgent',today:'Expires Today',expired:'Expired'};
+const ROUTE={produce:'Organic composting',dairy:'Sorting → anaerobic digestion (biogas)',bakery:'Anaerobic digestion / compost',pack:'Unpack & sort → mixed recovery'};
+let T,run,speed,zone,view,basket,S,P,R,LOG,sel,tags,timer,scanning;
+function init(){T=0;run=false;speed=1;zone='produce';view=view||'explore';basket=[];sel=null;tags=new Set();LOG=[];R=[];scanning=false;
+S={sold:0,near:0,kg:0,rev:0,save:0,blocked:0,recKg:0,orig:0};
+P=SEED.map((a,i)=>({id:i,name:a[0],e:a[1],z:a[2],price:a[3],exp:a[4],qty:a[5],q0:a[5],kg:a[6],tag:'RFID-ZS-'+String(i+1).padStart(4,'0'),batch:'B'+(240+i*7),st:-24-(i%3)*6}));}
+const rem=p=>p.exp-T;
+function stat(p){const r=rem(p);return r<=0?'expired':r<24?'today':r<72?'urgent':r<=120?'near':'fresh'}
+const price=p=>+(p.price*(1-DISC[stat(p)])).toFixed(2),f=n=>'AED '+n.toFixed(2);
+const fmtR=r=>r<=0?'expired':r<48?Math.floor(r)+' h left':(r/24).toFixed(1)+' days left';
+const clock=()=>new Date(START+T*36e5).toISOString().slice(0,16).replace('T',' ');
+function lg(m){LOG.unshift('['+clock().slice(5)+'] '+m);LOG.length=Math.min(LOG.length,40)}
+function sync(){P.forEach(p=>{if(stat(p)=='expired'&&p.qty>0){S.blocked+=p.qty;R.push({n:p.name,e:p.e,q:p.qty,kg:+(p.qty*p.kg).toFixed(2),z:p.z,t:T});lg('Expired: '+p.name+' ×'+p.qty+' blocked, sent to recovery');p.qty=0;basket=basket.filter(b=>b.id!=p.id)}});
+S.recKg=+R.filter(b=>T-b.t>=8).reduce((a,b)=>a+b.kg,0).toFixed(2)}
+function sensors(z){const b=BASE[z],t=b[0]+Math.sin(T/3+z.length)*.8+(z=='dairy'&&T>200?2:0),h=b[1]+Math.cos(T/4)*3;const items=P.filter(p=>p.z==z);const rfid=items.reduce((a,p)=>a+p.qty,0),w=items.reduce((a,p)=>a+p.qty*p.kg,0);
+const risk=Math.min(100,Math.round(Math.max(...items.filter(p=>p.qty>0).map(p=>Math.max(0,100*(1-rem(p)/168))),0)*.8+Math.abs(t-b[0])*4));return{t:t.toFixed(1),h:h.toFixed(0),rfid,w:(w*(1+Math.sin(T)*.01)).toFixed(1),risk}}
+function adv(h){T+=h;sync();render()}
+function toggleRun(){run=!run;pp.textContent=run?'⏸ Pause':'▶ Resume'}
+function cycleSpeed(){speed=speed==1?4:speed==4?12:1;spd.textContent='Speed ×'+speed}
+setInterval(()=>{if(run){T+=speed*.25;sync();render()}},500);
+function resetSim(c){if(!c&&!confirm('Reset the whole simulation?'))return;stopDemo();init();pp.textContent='▶ Resume';spd.textContent='Speed ×1';render()}
+function go(v,z){if(view=='walk'&&v!='walk')stopWalk();view=v;if(z)zone=z;if(v=='walk'){if(run)toggleRun();startWalk()}render();scrollTo(0,0)}
+function enter(){intro.style.display='none';render();if(!localStorage.__zs)try{localStorage.__zs=1;alert('Welcome! Click a section on the map, press SCAN THIS SHELF, then use TIME CONTROL to watch prices fall. Or hit PLAY DEMO.')}catch(e){}}
+function lbl(p){const s=stat(p),d=DISC[s];return `<div class="lbl"><span>${d?'<s>'+p.price.toFixed(2)+'</s>':''} <b>${f(price(p))}</b></span><span>${d?'-'+d*100+'%':''}</span></div>`}
+function pcard(p,shop){const s=stat(p),lit=tags.has(p.id)&&p.det?'lit':'';return `<div class="card ${p.det?'lit':''}" id="c${p.id}"><div class="em">${p.e}</div><b>${p.name}</b> <span class="badge ${s}">${NAMES[s]}</span><div class="mono" style="color:var(--mu)">${p.tag}</div><div>${fmtR(rem(p))} · qty ${p.qty}</div>${lbl(p)}<div style="margin-top:8px;display:flex;gap:6px"><button onclick="info(${p.id})">Inspect</button><button class="pri" onclick="add(${p.id})" ${s=='expired'||p.qty<1?'disabled style="opacity:.4"':''}>Add</button></div></div>`}
+function why(p){const s=stat(p);return s=='fresh'?'Full price: more than 5 days of shelf life remain.':s=='expired'?'Expiry time has passed. Sale blocked and flagged for recovery.':`Price cut ${DISC[s]*100}% automatically because status is “${NAMES[s]}” (${fmtR(rem(p))}).`}
+function info(id){sel=id;const p=P[id],s=stat(p),x=sensors(p.z),sp=Math.min(100,Math.round(Math.max(0,100*(1-rem(p)/168))*.8+Math.abs(x.t-BASE[p.z][0])*4));
+mbody.innerHTML=`<div style="font-size:54px">${p.e}</div><h2>${p.name}</h2><span class="badge ${s}">${NAMES[s]}</span>${lbl(p)}<p style="color:#9bb8b0">${why(p)}</p>${s!='fresh'&&s!='expired'?`<p style="color:#6ee7b7">✔ Benefit: buy this and save ${f(p.price-price(p))} while rescuing ${p.kg} kg of food from becoming waste.</p>`:''}
+<table><tr><td>Category</td><td>${Z[p.z][0]}</td></tr><tr><td>Stocked</td><td>${new Date(START+p.st*36e5).toISOString().slice(0,16).replace('T',' ')}</td></tr><tr><td>Expiry (fixed)</td><td>${new Date(START+p.exp*36e5).toISOString().slice(0,16).replace('T',' ')}</td></tr><tr><td>Remaining</td><td>${fmtR(rem(p))}</td></tr><tr><td>RFID / Batch</td><td class="mono">${p.tag} / ${p.batch}</td></tr><tr><td>Shelf</td><td>${Z[p.z][0]} · S1</td></tr><tr><td>Quantity</td><td>${p.qty}</td></tr><tr><td>Spoilage risk</td><td>${sp}/100 <i>(simulated estimate, not a safety verdict)</i></td></tr></table>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"><button onclick="scanOne(${id})">Scan RFID</button><button class="pri" onclick="add(${id});closeM()">Simulate Purchase</button><button onclick="closeM();go('shelves','${p.z}')">View Shelf Inventory</button><button onclick="closeM()">Close</button></div>`;modal.style.display='flex'}
+function closeM(){modal.style.display='none'}
+function scanOne(id){const p=P[id];p.det=true;tags.add(id);lg(p.tag+' · '+p.name+' detected');info(id)}
+async function scan(){if(scanning)return;scanning=true;const items=P.filter(p=>p.z==zone&&p.qty>0);P.forEach(p=>p.z==zone&&(p.det=false));lg('Scan started: '+Z[zone][0]);render();const bm=document.getElementById('beam');bm&&bm.classList.add('go');
+for(const p of items){await new Promise(r=>setTimeout(r,2400/Math.max(items.length,1)));p.det=true;tags.add(p.id);lg('Tag detected '+p.tag+' — '+p.name+' identified');if(stat(p)!='fresh')lg('Expiry warning generated: '+p.name);const c=document.getElementById('c'+p.id);c&&c.classList.add('lit')}
+lg('Inventory synchronised ('+items.length+' products)');scanning=false;render()}
+function add(id){const p=P[id];if(stat(p)=='expired'||p.qty<1){toast('This item cannot be purchased: '+(p.qty<1?'out of stock.':'it has expired.'));return}const b=basket.find(b=>b.id==id);if(b&&b.n>=p.qty){toast('No more stock available.');return}b?b.n++:basket.push({id,n:1});render();pulse()}
+function pulse(){const n=document.getElementById('bk');n&&(n.animate([{transform:'scale(1.3)'},{transform:'scale(1)'}],300))}
+function chg(id,d){const b=basket.find(b=>b.id==id);b.n+=d;if(b.n<1)basket=basket.filter(x=>x!=b);else if(b.n>P[id].qty)b.n=P[id].qty;render()}
+function tot(){let o=0,fin=0;basket.forEach(b=>{o+=P[b.id].price*b.n;fin+=price(P[b.id])*b.n});return{o,fin,sv:o-fin}}
+function checkout(){if(!basket.length)return;const t=tot();basket.forEach(b=>{const p=P[b.id],s=stat(p),k=b.n*p.kg;p.qty-=b.n;S.sold+=b.n;S.rev+=price(p)*b.n;S.save+=(p.price-price(p))*b.n;S.orig+=p.price*b.n;if(s!='fresh'){S.near+=b.n;S.kg+=k}lg('Sold '+p.name+' ×'+b.n+' at '+f(price(p)));const c=document.getElementById('c'+p.id);c&&c.classList.add('sold')});
+toast('✔ Purchase confirmed (simulated). Total '+f(t.fin)+' — you saved '+f(t.sv)+'.');basket=[];render()}
+function basketHTML(){if(!basket.length)return '<p style="color:var(--mu)">Your basket is empty. Add items from any shelf.</p>';const t=tot();return `<table>${basket.map(b=>`<tr><td>${P[b.id].e} ${P[b.id].name}</td><td><button onclick="chg(${b.id},-1)">−</button> ${b.n} <button onclick="chg(${b.id},1)">+</button></td><td>${f(price(P[b.id])*b.n)}</td></tr>`).join('')}</table><p>Original ${f(t.o)} · Discounts −${f(t.sv)}<br><b>Total ${f(t.fin)}</b> · You save ${f(t.sv)}</p><button class="pri" onclick="checkout()">Confirm purchase (simulated)</button>`}
+function view_explore(){return `<h2>Explore Store</h2><div class="loc">📍 You are here: <b>${Z[zone][0]}</b> — tap a section to walk over. <i>(Interactive 2D store explorer; no 3D mode in this build.)</i></div><div class="map">${Object.keys(Z).map(k=>`<button class="zone glass ${k==zone?'here':''}" onclick="go('shelves','${k}')"><span style="font-size:34px">${Z[k][1]}</span><br><b>${Z[k][0]}</b><br><small>${P.filter(p=>p.z==k).reduce((a,p)=>a+p.qty,0)} items · ${P.filter(p=>p.z==k&&['near','urgent','today'].includes(stat(p))&&p.qty).length} expiring</small>${k==zone?'<span class="here-tag">● YOU ARE HERE</span>':''}</button>`).join('')}
+<button class="zone glass" onclick="go('shop')"><span style="font-size:34px">🧾</span><br><b>Smart Checkout</b><br><small>${basket.length} lines in basket</small></button><button class="zone glass" onclick="go('recovery')"><span style="font-size:34px">♻️</span><br><b>Food Recovery Centre</b><br><small>${R.length} batches</small></button></div>`}
+function view_shelves(){const x=sensors(zone),items=P.filter(p=>p.z==zone),det=items.filter(p=>p.det).length;
+return `<h2>Smart Shelves</h2><div class="loc"><button onclick="go('explore')">← Back to map</button> 📍 ${Z[zone][0]} ${Object.keys(Z).map(k=>`<button onclick="go('shelves','${k}')" ${k==zone?'class=on':''}>${Z[k][1]}</button>`).join(' ')}</div>
+<div class="shelf"><div class="beam" id="beam"></div><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><span class="mono">RFID READER R-${zone.toUpperCase()} · ${scanning?'SCANNING':'ONLINE'} · tags ${det}/${items.length}</span><button class="pri" onclick="scan()">SCAN THIS SHELF</button></div><div class="grid">${items.map(p=>pcard(p)).join('')}</div></div>
+<div class="grid" style="margin-top:12px"><div class="glass"><b>Sensors</b> <small style="color:var(--mu)">(simulated)</small><table><tr><td>🌡 Temperature</td><td>${x.t} °C</td></tr><tr><td>💧 Humidity</td><td>${x.h}%</td></tr><tr><td>⚖ Weight</td><td>${x.w} kg</td></tr><tr><td>RFID count vs weight</td><td>${x.rfid} items · ${Math.abs(x.rfid-items.reduce((a,p)=>a+p.qty,0))?'mismatch':'match'}</td></tr></table><div style="margin-top:8px">AI spoilage-risk (illustrative): ${x.risk}/100</div><div class="pw"><i style="width:${x.risk}%;background:${x.risk>60?'var(--rd)':x.risk>30?'var(--am)':'var(--lime)'}"></i></div></div>
+<div class="glass"><b>Live event log</b><div class="logbox">${LOG.join('<br>')||'No events yet. Press SCAN THIS SHELF.'}</div></div></div>`}
+function view_shop(){const q=(window.q||'').toLowerCase(),c=window.cat||'all',so=window.so||0;let L=P.filter(p=>(c=='all'||p.z==c)&&p.name.toLowerCase().includes(q));if(so)L=[...L].sort((a,b)=>DISC[stat(b)]-DISC[stat(a)]);
+return `<h2>Shop</h2><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><input id="sq" placeholder="Search products" value="${window.q||''}" oninput="q=this.value;render(1)" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--tx)"><select onchange="cat=this.value;render()" style="padding:8px;border-radius:10px;background:var(--panel);color:var(--tx)"><option value="all">All</option>${Object.keys(Z).map(k=>`<option value="${k}" ${c==k?'selected':''}>${Z[k][0]}</option>`).join('')}</select><button onclick="so=so?0:1;render()">${so?'✓ ':''}Sort by discount</button></div>
+<div class="grid">${L.length?L.map(p=>pcard(p)).join(''):'<p>No products match your search.</p>'}</div><div class="glass" style="margin-top:14px"><h3 id="bk">🧺 Basket (${basket.reduce((a,b)=>a+b.n,0)})</h3>${basketHTML()}</div>`}
+function view_recovery(){const st=b=>T-b.t<4?0:T-b.t<8?1:2,N=['Collected','Sorting','Recovered'];
+return `<h2>Food Recovery Centre</h2><div class="flow"><span>UNSOLD FOOD</span>→<span>COLLECTION</span>→<span>SORTING</span>→<span>RECOVERY</span></div><p style="color:var(--mu)">Expired items never return to saleable stock. Routes depend on food type; packaging must be removed first.</p>
+${R.length?R.map(b=>`<div class="glass" style="margin:8px 0">${b.e} <b>${b.n}</b> ×${b.q} (${b.kg} kg) · ${ROUTE[b.z]}<div class="pw" style="margin:6px 0"><i style="width:${(st(b)+1)*33.3}%"></i></div><span class="mono">${N[st(b)]}</span></div>`).join(''):'<div class="glass">No batches yet. Advance time so products expire, then they appear here automatically.</div>'}`}
+function view_insights(){const ev=P.reduce((a,p)=>a+(stat(p)!='fresh'&&stat(p)!='expired'&&p.qty?1:0),0),convW=+(S.recKg+R.reduce((a,b)=>a+b.kg,0)*0+0).toFixed(2);const expKg=R.reduce((a,b)=>a+b.kg,0),conv=+(expKg+S.kg).toFixed(2);
+const N=[['Products tracked',P.length],['RFID tags detected',tags.size],['Approaching expiry',ev],['Expired & blocked',S.blocked],['Near-expiry sold',S.near],['Waste prevented (kg)',S.kg.toFixed(2)],['Sent for recovery (kg)',expKg.toFixed(2)],['Revenue recovered (AED)',S.rev.toFixed(2)],['Customer savings (AED)',S.save.toFixed(2)]];
+const cnt=P.reduce((o,p)=>(o[stat(p)]=(o[stat(p)]||0)+p.qty,o),{});
+return `<h2>Insights</h2><div class="grid">${N.map(n=>`<div class="glass"><div class="num">${n[1]}</div>${n[0]}</div>`).join('')}</div>
+<div class="grid" style="margin-top:12px"><div class="glass"><b>Stock by expiry status</b>${Object.keys(NAMES).map(k=>`<div>${NAMES[k]} (${cnt[k]||0})<div class="bar" style="width:${Math.min(100,(cnt[k]||0)/3)}%"></div></div>`).join('')}</div>
+<div class="glass"><b>Conventional vs ZERO SHELF</b> (same products &amp; demand)<table><tr><th></th><th>Conventional</th><th>ZERO SHELF</th></tr><tr><td>Wasted (kg)</td><td>${conv}</td><td>${expKg.toFixed(2)}</td></tr><tr><td>Revenue (AED)</td><td>${(S.orig).toFixed(2)}</td><td>${S.rev.toFixed(2)}</td></tr></table><small style="color:var(--mu)">Assumption: without discounts, items sold near expiry would have gone unsold. All figures computed from this simulation’s events; estimates only.</small></div></div>`}
+function render(keep){if(intro.style.display!='none'&&intro.style.display!=='')return;const V={explore:['🧭','Explore Store'],walk:['🚶','Walk 3D'],shelves:['📡','Smart Shelves'],shop:['🛒','Shop'],recovery:['♻️','Recovery'],insights:['📊','Insights']};
+nav.innerHTML='<b>ZERO SHELF</b>'+Object.keys(V).map(k=>`<button class="${k==view?'on':''}" title="${V[k][1]}" onclick="go('${k}')">${V[k][0]} ${V[k][1]}</button>`).join('')+'<span class="sp"></span><button onclick="go(\'shop\')" title="Basket">🧺 ${basket.length}</button><button class="pri" onclick="startDemo()">▶ PLAY DEMO</button>'.replace('${basket.length}',basket.reduce((a,b)=>a+b.n,0));
+const m=document.getElementById('modal').style.display=='flex';if(!m&&view!='walk'){const y=scrollY;app.innerHTML=({explore:view_explore,shelves:view_shelves,shop:view_shop,recovery:view_recovery,insights:view_insights})[view]();if(keep){const e=document.getElementById('sq');e&&(e.focus(),e.setSelectionRange(1e3,1e3))}}
+clk.textContent=clock();tc.style.display=view=='walk'?'none':'block';if(view=='walk')walkPop();pp.textContent=run?'⏸ Pause':'▶ Resume'}
+/* Guided demo */
+let dq=[],dp=false,dt=null;const wait=ms=>new Promise(r=>dt=setTimeout(r,ms));
+const STEPS=[['Entering the supermarket…',()=>go('explore')],['Walking to Fruits & Vegetables.',()=>go('shelves','produce')],['RFID scan: strawberries, salad leaves…',()=>scan(),3200],['Inventory synchronised automatically.',()=>{}],['Advancing time by 2 days…',()=>adv(48)],['Strawberries approach expiry; label price drops.',()=>{adv(24)}],['Shopper buys discounted strawberries.',()=>{add(0);add(0);go('shop');checkout()}],['Revenue & stock metrics updated.',()=>go('shelves','produce')],['Time passes; salad leaves expire and are blocked.',()=>adv(48)],['Expired food moves to recovery.',()=>go('recovery')],['Final dashboard.',()=>{adv(10);go('insights')}]];
+let di=0,dskip=false;
+async function startDemo(){stopDemo();resetSim(1);demo.style.display='block';dp=false;const id=++window._d;for(di=0;di<STEPS.length;di++){if(window._d!=id)return;const s=STEPS[di];dtx.textContent=(di+1)+'/'+STEPS.length+' · '+s[0];try{await s[1]()}catch(e){}let w=s[2]||2400;dskip=false;while(w>0&&!dskip&&window._d==id){await wait(200);if(!dp)w-=200}}if(window._d==id)dtx.textContent='Demo complete ✔ — explore freely.'}
+window._d=0;function stopDemo(){window._d++;clearTimeout(dt);demo.style.display='none'}
+function demoPause(){dp=!dp}function demoSkip(){dskip=true;clearTimeout(dt)}
+/* 3D Immersive Store Walk (three.js r128, loaded on demand) */
+let W=null;const K={},ZX={produce:-15,dairy:-5,bakery:5,pack:15};
+const loadThree=()=>window.THREE?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+function view_walk(){const b=(k,t)=>`<button style="padding:0;min-height:44px" onpointerdown="K['${k}']=1" onpointerup="K['${k}']=0" onpointerleave="K['${k}']=0">${t}</button>`;
+return `<div style="position:relative;height:calc(100vh - 150px);min-height:420px;border-radius:16px;overflow:hidden;border:1px solid var(--line)"><div id="wkc" style="position:absolute;inset:0;touch-action:none"></div>
+<div class="glass" style="position:absolute;left:10px;top:10px;padding:10px;font-size:13px;max-width:250px"><b>Immersive Store Walk</b><br>W/S or ↑/↓ move · A/D strafe · ←/→ turn<br>Drag mouse to look · click a product to inspect<br><span id="wkb" class="mono"></span><br><button onclick="go('explore')" style="margin-top:6px">⌂ Exit to main screen</button></div>
+<div class="glass" style="position:absolute;right:10px;top:10px;padding:8px;text-align:center"><canvas id="wkm" width="120" height="90"></canvas><div id="wkl" class="mono"></div></div>
+<div id="wkp" class="glass" style="position:absolute;left:50%;top:70px;transform:translateX(-50%);width:min(390px,92%);max-height:62%;overflow:auto;display:none;background:rgba(7,20,42,.94);color:#eefaf5"></div>
+<div id="wkt" class="glass" style="position:absolute;left:50%;transform:translateX(-50%);bottom:14px;padding:6px 12px;display:none;white-space:nowrap"></div>
+<div style="position:absolute;left:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,44px);gap:4px">${b('ArrowLeft','↺')}${b('w','▲')}${b('ArrowRight','↻')}${b('a','◀')}${b('s','▼')}${b('d','▶')}</div></div>`}
+async function startWalk(){app.innerHTML=view_walk();try{await loadThree();if(view!='walk')return;const el=wkc,w=()=>el.clientWidth,h=()=>el.clientHeight;
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(w(),h());r.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(r.domElement);
+const sc=new THREE.Scene();sc.background=new THREE.Color(0x0a1f2e);sc.fog=new THREE.Fog(0x0a1f2e,20,50);
+const cam=new THREE.PerspectiveCamera(70,w()/h(),.1,80);cam.rotation.order='YXZ';
+sc.add(new THREE.HemisphereLight(0xffffff,0x335544,1));
+const box=(sx,sy,sz,x,y,z,c)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);sc.add(m);return m};
+box(44,.1,32,0,0,1,0xdfeee8);box(44,.1,32,0,5,1,0x16323a);box(44,5,.2,0,2.5,-14,0x1b4b45);box(44,5,.2,0,2.5,17,0x1b4b45);box(.2,5,32,-22,2.5,1,0x1b4b45);box(.2,5,32,22,2.5,1,0x1b4b45);
+for(let x=-16;x<=16;x+=8)for(let z=-8;z<=12;z+=10)box(3,.05,.6,x,4.9,z,0xffffff);
+const tex=(cv)=>new THREE.CanvasTexture(cv);
+const sign=(t,c,x,y,z)=>{const cv=document.createElement('canvas');cv.width=512;cv.height=96;const g=cv.getContext('2d');g.fillStyle='rgba(6,30,40,.9)';g.fillRect(0,0,512,96);g.strokeStyle=c;g.lineWidth=4;g.strokeRect(2,2,508,92);g.fillStyle='#eefaf5';g.font='700 38px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(t,256,50);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(cv)}));s.scale.set(5.5,1.03,1);s.position.set(x,y,z);sc.add(s)};
+Object.keys(ZX).forEach(k=>{const x=ZX[k];box(7,3.2,.3,x,1.6,-13.6,0x2a5a50);box(7,.12,1.2,x,.9,-13,0xcfd8d4);box(7,.12,1.2,x,2.1,-13,0xcfd8d4);box(6.6,.06,.06,x,3.05,-12.4,0x22d3ee);sign(Z[k][0],'#22d3ee',x,4,-12.8)});
+box(5,1,1.4,-12,.5,8,0x2c4a60);sign('SMART CHECKOUT','#fbbf24',-12,3,8);box(6,1.2,3,12,.6,8,0x1f5f3f);box(1,.8,1,10,.4,10.2,0x3b7a52);box(1,.8,1,14,.4,10.2,0x3b7a52);sign('FOOD RECOVERY CENTRE','#a3e635',12,3.2,8);sign('ZERO SHELF · ENTRANCE','#6ee7b7',0,3.6,16.7);
+const em=e=>{const cv=document.createElement('canvas');cv.width=cv.height=128;const g=cv.getContext('2d');g.font='100px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(e,64,70);return tex(cv)};
+const sp=P.map(p=>{const i=P.filter(q=>q.z==p.z).indexOf(p),s=new THREE.Sprite(new THREE.SpriteMaterial({map:em(p.e)}));s.scale.set(1.2,1.2,1);s.position.set(ZX[p.z]+(i%3-1)*2.1,(i<3?.96:2.16)+.6,-13);s.userData.pid=p.id;sc.add(s);return s});
+W={r,sc,cam,sp,x:0,z:13,yaw:0,pitch:0,fr:0,t0:performance.now(),tg:null,drag:null};
+const ray=new THREE.Raycaster(),pick=(nx,ny,d)=>{ray.setFromCamera({x:nx,y:ny},cam);const hit=ray.intersectObjects(W.sp.filter(s=>s.visible))[0];return hit&&hit.distance<d?hit.object.userData.pid:null};
+const kd=e=>{if(view!='walk'||modal.style.display=='flex')return;const k=e.key.length==1?e.key.toLowerCase():e.key;if(k.startsWith('Arrow'))e.preventDefault();K[k]=1},ku=e=>{const k=e.key.length==1?e.key.toLowerCase():e.key;K[k]=0},
+rs=()=>{if(!W)return;r.setSize(w(),h());cam.aspect=w()/h();cam.updateProjectionMatrix()},
+pd=e=>{W.drag={x:e.clientX,y:e.clientY,m:0}},pm=e=>{const d=W&&W.drag;if(!d)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;d.m+=Math.abs(dx)+Math.abs(dy);d.x=e.clientX;d.y=e.clientY;W.yaw-=dx*.005;W.pitch=Math.max(-1,Math.min(1,W.pitch-dy*.004))},
+pu=e=>{const d=W.drag;W.drag=null;if(d&&d.m<6){const b=r.domElement.getBoundingClientRect(),id=pick((e.clientX-b.left)/b.width*2-1,-((e.clientY-b.top)/b.height*2-1),10);if(id!=null)info(id)}};
+addEventListener('keydown',kd);addEventListener('keyup',ku);addEventListener('resize',rs);r.domElement.addEventListener('pointerdown',pd);addEventListener('pointermove',pm);addEventListener('pointerup',pu);W.off=()=>{removeEventListener('keydown',kd);removeEventListener('keyup',ku);removeEventListener('resize',rs);removeEventListener('pointermove',pm);removeEventListener('pointerup',pu)};
+const loc=()=>{const{x,z}=W;if(z<-6)return Z[x<-10?'produce':x<0?'dairy':x<10?'bakery':'pack'][0];if(z>3&&x<-2)return 'Smart Checkout';if(z>3&&x>5)return 'Food Recovery Centre';return z>12?'Store Entrance':'Main Aisle'};
+const mm=()=>{const g=wkm.getContext('2d'),X=v=>(v+22)/44*120,Y=v=>(v+14)/31*90;g.clearRect(0,0,120,90);g.fillStyle='#1b4b45';g.fillRect(0,0,120,90);g.fillStyle='#22d3ee';Object.values(ZX).forEach(x=>g.fillRect(X(x-3.5),Y(-13.5),X(x+3.5)-X(x-3.5),5));g.fillStyle='#fbbf24';g.fillRect(X(-14.5),Y(7),14,6);g.fillStyle='#a3e635';g.fillRect(X(9),Y(6.5),16,8);g.fillStyle='#fff';g.beginPath();g.arc(X(W.x),Y(W.z),4,0,7);g.fill();g.strokeStyle='#fff';g.beginPath();g.moveTo(X(W.x),Y(W.z));g.lineTo(X(W.x)-Math.sin(W.yaw)*12,Y(W.z)-Math.cos(W.yaw)*12);g.stroke()};
+const loop=()=>{if(!W)return;W.raf=requestAnimationFrame(loop);const n=performance.now(),dt=Math.min(.05,(n-W.t0)/1e3);W.t0=n;const v=k=>K[k]?1:0;
+W.yaw+=(v('ArrowLeft')-v('ArrowRight'))*1.8*dt;const fw=v('w')+v('ArrowUp')-v('s')-v('ArrowDown'),st=v('d')-v('a'),s=4.5*dt,sn=Math.sin(W.yaw),cs=Math.cos(W.yaw);
+W.x=Math.max(-21,Math.min(21,W.x+(-sn*fw+cs*st)*s));W.z=Math.max(-10.4,Math.min(16,W.z+(-cs*fw-sn*st)*s));
+cam.position.set(W.x,1.65,W.z);cam.rotation.set(W.pitch,W.yaw,0);
+if(W.fr++%15==0){P.forEach((p,i)=>{const m=W.sp[i];m.visible=p.qty>0;m.material.color.set(stat(p)=='expired'?0x666666:0xffffff)});wkl.textContent='📍 '+loc();mm();const id=pick(0,0,7),t=wkt;if(id!=null){const p=P[id],s=stat(p);t.style.display='block';t.innerHTML=`${p.e} <b>${p.name}</b> · ${f(price(p))} · ${NAMES[s]} · <span class="mono">${p.tag}</span> — click to inspect`}else t.style.display='none';walkPop()}
+r.render(sc,cam)};loop()}catch(e){app.innerHTML='<div class="glass">3D mode is unavailable on this device or network. <button onclick="go(\'explore\')">Open the Store Explorer instead</button></div>'}}
+function toast(m){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='glass';e.style.cssText='position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:60;background:#0b1d2f;color:#eefaf5';document.body.appendChild(e)}e.textContent=m;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',3500)}
+function walkPop(){if(!W)return;const dc=Math.hypot(W.x+12,W.z-8),dr=Math.hypot(W.x-12,W.z-8),n=basket.reduce((a,b)=>a+b.n,0),t=tot();let h='';const b=document.getElementById('wkb');if(b)b.textContent='🧺 '+n+' item'+(n==1?'':'s')+' · '+f(t.fin);
+if(dc<4.5){const kg=basket.reduce((a,b)=>a+(stat(P[b.id])!='fresh'?b.n*P[b.id].kg:0),0);h=`<h3>🧾 Smart Checkout</h3>${basketHTML()}${n?`<p style="color:#6ee7b7">✔ Benefits: you save ${f(t.sv)} and rescue ${kg.toFixed(2)} kg of food from waste, and the store recovers revenue instead of losing it to expiry.</p>`:'<p>Tip: click products on the shelves, choose “Simulate Purchase”, then come back here to pay.</p>'}`}
+else if(dr<5.5){const kg=R.reduce((a,b)=>a+b.kg,0),done=R.filter(b=>T-b.t>=8).length;h=`<h3>♻️ Food Recovery Centre</h3><div class="flow"><span>UNSOLD</span>→<span>COLLECTION</span>→<span>SORTING</span>→<span>RECOVERY</span></div><p>Expired food never returns to sale. It is sorted by type: produce → composting, dairy &amp; bakery → anaerobic digestion (biogas), packaged food → unpacked and sorted first.</p><p class="mono">Batches: ${R.length} · ${kg.toFixed(2)} kg collected · ${done} processed</p><p style="color:#6ee7b7">✔ Why buying near-expiry food helps: every discounted item you buy is one less item sent here. You save money, the store recovers revenue, and food gets eaten instead of wasted.</p><button onclick="go('recovery')">Open full Recovery view</button>`}
+if(h!=W.ph){W.ph=h;const p=document.getElementById('wkp');if(p){p.innerHTML=h;p.style.display=h?'block':'none'}}}
+function stopWalk(){if(W){cancelAnimationFrame(W.raf);W.off();W.r.dispose();W=null}Object.keys(K).forEach(k=>K[k]=0)}
+init();addEventListener('keydown',e=>{if(e.key=='Escape')closeM()});
+</script></body></html>
